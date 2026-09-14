@@ -460,6 +460,7 @@ Please output strictly valid JSON according to the schema.
                   cohort: { type: Type.STRING },
                   type: { type: Type.STRING },
                   details: { type: Type.STRING },
+                  sourceUrl: { type: Type.STRING },
                 },
                 required: ['date', 'title', 'cohort', 'type'],
               },

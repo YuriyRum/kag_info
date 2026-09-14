@@ -82,6 +82,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
           cohort: '8ac',
           type: 'exam',
           details: 'Lektion 1-3 Wiederholung',
+          sourceUrl: 'https://adenauer-bonn.de/klassenarbeitstermine/',
         },
         {
           date: '18.09.2026',
@@ -90,6 +91,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
           cohort: '6a',
           type: 'exam',
           details: 'Unit 1 Check',
+          sourceUrl: 'https://adenauer-bonn.de/klassenarbeitstermine/',
         },
         {
           date: '22.09.2026',
@@ -98,6 +100,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
           cohort: '5-6',
           type: 'meeting',
           details: 'Wahl der Elternvertreter',
+          sourceUrl: 'https://adenauer-bonn.de/termine/',
         },
         {
           date: '25.09.2026',
@@ -106,6 +109,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
           cohort: 'Alle',
           type: 'event',
           details: 'Rückgabe an Klassenleitung',
+          sourceUrl: 'https://adenauer-bonn.de/ganztag/',
         },
         {
           date: '02.10.2026',
@@ -114,6 +118,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
           cohort: 'Alle',
           type: 'holiday',
           details: 'Ganztägige Lehrerkonferenz',
+          sourceUrl: 'https://adenauer-bonn.de/termine/',
         },
       ],
       schoolLifeAndProjects: [
@@ -225,6 +230,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
           cohort: '8ac',
           type: 'exam',
           details: 'Lessons 1-3 Revision',
+          sourceUrl: 'https://adenauer-bonn.de/klassenarbeitstermine/',
         },
         {
           date: '18.09.2026',
@@ -233,6 +239,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
           cohort: '6a',
           type: 'exam',
           details: 'Unit 1 Check',
+          sourceUrl: 'https://adenauer-bonn.de/klassenarbeitstermine/',
         },
         {
           date: '22.09.2026',
@@ -241,6 +248,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
           cohort: '5-6',
           type: 'meeting',
           details: 'Election of parent representatives',
+          sourceUrl: 'https://adenauer-bonn.de/termine/',
         },
         {
           date: '25.09.2026',
@@ -249,6 +257,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
           cohort: 'All',
           type: 'event',
           details: 'Return slip to class teacher',
+          sourceUrl: 'https://adenauer-bonn.de/ganztag/',
         },
         {
           date: '02.10.2026',
@@ -257,6 +266,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
           cohort: 'All',
           type: 'holiday',
           details: 'Faculty conference',
+          sourceUrl: 'https://adenauer-bonn.de/termine/',
         },
       ],
       schoolLifeAndProjects: [
@@ -368,6 +378,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
         cohort: '8ac',
         type: 'exam',
         details: 'Lektion 1-3 Wiederholung',
+        sourceUrl: 'https://adenauer-bonn.de/klassenarbeitstermine/',
       },
       {
         date: '18.09.2026',
@@ -376,6 +387,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
         cohort: '6a',
         type: 'exam',
         details: 'Unit 1 Check',
+        sourceUrl: 'https://adenauer-bonn.de/klassenarbeitstermine/',
       },
       {
         date: '22.09.2026',
@@ -384,6 +396,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
         cohort: '5-6',
         type: 'meeting',
         details: 'Wahl der Klassenelternvertreter',
+        sourceUrl: 'https://adenauer-bonn.de/termine/',
       },
       {
         date: '25.09.2026',
@@ -392,6 +405,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
         cohort: 'Alle',
         type: 'event',
         details: 'Rückgabe an die Klassenleitung',
+        sourceUrl: 'https://adenauer-bonn.de/ganztag/',
       },
       {
         date: '02.10.2026',
@@ -400,6 +414,7 @@ export function getClientFallbackBriefing(lang: 'de' | 'en' | 'ru' = 'de'): News
         cohort: 'Alle',
         type: 'holiday',
         details: 'Ganztägige schulpädagogische Lehrerkonferenz',
+        sourceUrl: 'https://adenauer-bonn.de/termine/',
       },
     ],
     schoolLifeAndProjects: [

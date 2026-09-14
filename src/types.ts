@@ -71,6 +71,7 @@ export interface NewsletterSummary {
     cohort: string;
     type: 'exam' | 'event' | 'holiday' | 'meeting';
     details?: string;
+    sourceUrl?: string;
   }[];
   schoolLifeAndProjects: {
     title: string;

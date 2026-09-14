@@ -100,6 +100,7 @@ export const OnlineBriefingView: React.FC<OnlineBriefingViewProps> = ({
       : isEn
       ? 'Exams, Tests & School Calendar'
       : 'Klassenarbeiten, Tests & Schultermine',
+    officialCalLink: isRu ? 'Официальный календарь' : isEn ? 'Official Calendar' : 'Schulkalender (Portal)',
     searchPlaceholder: isRu
       ? 'Поиск по классу или предмету (напр. 5a, Englisch, Latein)...'
       : isEn
@@ -303,13 +304,25 @@ export const OnlineBriefingView: React.FC<OnlineBriefingViewProps> = ({
             </div>
           </section>
 
-          {/* 3. EXAMS & SCHOOL CALENDAR (With 1-click .ics export on each row) */}
+          {/* 3. EXAMS & SCHOOL CALENDAR (With 1-click .ics export and source links on each row) */}
           <section id="exams-calendar-section">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3 border-b border-slate-200 pb-2">
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2 font-serif">
-                <Calendar className="w-4 h-4 text-blue-600" />
-                {t.examTimetableHeading}
-              </h2>
+              <div className="flex items-center gap-3 flex-wrap">
+                <h2 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2 font-serif">
+                  <Calendar className="w-4 h-4 text-blue-600" />
+                  {t.examTimetableHeading}
+                </h2>
+                <a
+                  href="https://adenauer-bonn.de/termine/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200/60 transition"
+                  title="adenauer-bonn.de/termine/"
+                >
+                  <span>{t.officialCalLink}</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
 
               <div className="flex items-center gap-2 flex-wrap">
                 <div className="relative">
@@ -363,20 +376,36 @@ export const OnlineBriefingView: React.FC<OnlineBriefingViewProps> = ({
                           </span>
                         </td>
                         <td className="py-2.5 px-3">
-                          <div className="font-semibold text-slate-900">{ev.title}</div>
+                          <a
+                            href={
+                              ev.sourceUrl ||
+                              (ev.type === 'exam'
+                                ? 'https://adenauer-bonn.de/klassenarbeitstermine/'
+                                : 'https://adenauer-bonn.de/termine/')
+                            }
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group/link inline-flex items-center gap-1.5 font-semibold text-slate-900 hover:text-blue-600 transition"
+                            title={`${isRu ? 'Открыть на сайте школы' : isEn ? 'Open on school website' : 'Auf adenauer-bonn.de öffnen'}: ${ev.title}`}
+                          >
+                            <span>{ev.title}</span>
+                            <ExternalLink className="w-3 h-3 text-slate-400 group-hover/link:text-blue-600 opacity-60 group-hover/link:opacity-100 shrink-0 transition" />
+                          </a>
                           {ev.details && (
                             <div className="text-[11px] text-slate-500 mt-0.5">{ev.details}</div>
                           )}
                         </td>
                         <td className="py-2.5 px-3 text-right whitespace-nowrap print:hidden">
-                          <button
-                            onClick={() => downloadIcsFile(ev)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-medium transition cursor-pointer text-[11px]"
-                            title="Download .ics event to add to Google Calendar, Apple Calendar, or Outlook"
-                          >
-                            <Calendar className="w-3 h-3 text-blue-600" />
-                            <span>{t.exportCalBtn}</span>
-                          </button>
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button
+                              onClick={() => downloadIcsFile(ev)}
+                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 font-medium transition cursor-pointer text-[11px]"
+                              title="Download .ics event to add to Google Calendar, Apple Calendar, or Outlook"
+                            >
+                              <Calendar className="w-3 h-3 text-blue-600" />
+                              <span>{t.exportCalBtn}</span>
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))
