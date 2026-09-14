@@ -252,40 +252,53 @@ export const OnlineBriefingView: React.FC<OnlineBriefingViewProps> = ({
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {briefing.executiveHighlights.map((hl, idx) => (
-                <div
+                <a
                   key={idx}
-                  className={`rounded-xl p-4 border transition ${
+                  href={hl.sourceUrl || 'https://adenauer-bonn.de/'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`group flex flex-col justify-between rounded-xl p-4 border transition duration-150 hover:shadow-md cursor-pointer ${
                     hl.urgent
-                      ? 'bg-rose-50/70 border-rose-200 text-rose-950'
-                      : 'bg-slate-50 border-slate-200 text-slate-900'
+                      ? 'bg-rose-50/70 border-rose-200 hover:border-rose-300 text-rose-950 hover:bg-rose-50'
+                      : 'bg-slate-50 border-slate-200 hover:border-blue-300 hover:bg-blue-50/30 text-slate-900'
                   }`}
+                  title={`${isRu ? 'Открыть источник на сайте' : isEn ? 'Open source on website' : 'Quelle auf adenauer-bonn.de öffnen'}: ${hl.title}`}
                 >
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    {hl.tag && (
-                      <span
-                        className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
-                          hl.urgent
-                            ? 'bg-rose-200 text-rose-800'
-                            : 'bg-blue-100 text-blue-800'
-                        }`}
-                      >
-                        {hl.tag}
-                      </span>
-                    )}
-                    {hl.urgent && (
-                      <span className="text-[10px] uppercase font-bold text-rose-600 flex items-center gap-1">
-                        <AlertCircle className="w-3 h-3" />
-                        {isRu ? 'Срочно' : isEn ? 'Priority' : 'Frist'}
-                      </span>
-                    )}
+                  <div>
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      {hl.tag && (
+                        <span
+                          className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                            hl.urgent
+                              ? 'bg-rose-200 text-rose-800'
+                              : 'bg-blue-100 text-blue-800'
+                          }`}
+                        >
+                          {hl.tag}
+                        </span>
+                      )}
+                      {hl.urgent && (
+                        <span className="text-[10px] uppercase font-bold text-rose-600 flex items-center gap-1">
+                          <AlertCircle className="w-3 h-3" />
+                          {isRu ? 'Срочно' : isEn ? 'Priority' : 'Frist'}
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-bold text-sm text-slate-900 group-hover:text-blue-700 mb-1.5 leading-snug transition-colors">
+                      {hl.title}
+                    </h3>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      {hl.detail}
+                    </p>
                   </div>
-                  <h3 className="font-bold text-sm text-slate-900 mb-1.5 leading-snug">
-                    {hl.title}
-                  </h3>
-                  <p className="text-xs text-slate-600 leading-relaxed">
-                    {hl.detail}
-                  </p>
-                </div>
+
+                  <div className="mt-3 pt-2.5 border-t border-slate-200/80 flex items-center justify-between text-[11px] font-medium text-slate-500 group-hover:text-blue-600 transition-colors">
+                    <span className="flex items-center gap-1">
+                      {isRu ? 'К источнику на сайте' : isEn ? 'Open on website' : 'Quelle auf Website öffnen'}
+                    </span>
+                    <ExternalLink className="w-3.5 h-3.5 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-transform" />
+                  </div>
+                </a>
               ))}
             </div>
           </section>

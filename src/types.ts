@@ -53,6 +53,7 @@ export interface NewsletterSummary {
     detail: string;
     urgent?: boolean;
     tag?: string;
+    sourceUrl?: string;
   }[];
   gradeLevelSections: {
     gradeBand: string; // "Unterstufe (5-7)" | "Mittelstufe (8-10)" | "Oberstufe (EF-Q2)" | "Schulweit"
