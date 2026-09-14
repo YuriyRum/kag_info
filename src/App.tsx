@@ -125,11 +125,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col font-sans antialiased selection:bg-blue-600 selection:text-white">
-      {/* Clean Top Toolbar with ONLY School Icon and Refresh Button */}
+      {/* Single Unified Sticky Top Toolbar: Logo, Language Selector & Refresh Button */}
       <Header
         isRefreshing={isRefreshing}
         onRefreshSummary={() => handleRefreshSummary()}
         language={language}
+        onLanguageChange={handleLanguageChange}
       />
 
       {/* Main Content Area */}

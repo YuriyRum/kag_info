@@ -1,10 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Calendar,
-  Download,
-  Printer,
-  Share2,
-  CheckCircle2,
   AlertCircle,
   Clock,
   ExternalLink,
@@ -14,17 +10,14 @@ import {
   Phone,
   Mail,
   Sparkles,
-  Filter,
   CheckSquare,
   Square,
-  QrCode,
-  Copy,
   ChevronRight,
   ShieldCheck,
-  Star
+  Star,
 } from 'lucide-react';
 import type { NewsletterSummary } from '../types';
-import { downloadIcsFile, downloadAllExamsIcs } from '../lib/calendar';
+import { downloadIcsFile } from '../lib/calendar';
 import { RefreshCw } from 'lucide-react';
 
 interface OnlineBriefingViewProps {
@@ -39,7 +32,6 @@ export const OnlineBriefingView: React.FC<OnlineBriefingViewProps> = ({
   briefing,
   language,
   onRefreshSummary,
-  onLanguageChange,
   isRefreshing,
 }) => {
   const isEn = language === 'en';
@@ -47,8 +39,6 @@ export const OnlineBriefingView: React.FC<OnlineBriefingViewProps> = ({
 
   const [examSearch, setExamSearch] = useState<string>('');
   const [onlyExams, setOnlyExams] = useState<boolean>(false);
-  const [copiedLink, setCopiedLink] = useState<boolean>(false);
-  const [showQrModal, setShowQrModal] = useState<boolean>(false);
   const [checkedTasks, setCheckedTasks] = useState<Record<string, boolean>>(() => {
     try {
       const saved = localStorage.getItem('kag_briefing_tasks');
@@ -68,16 +58,6 @@ export const OnlineBriefingView: React.FC<OnlineBriefingViewProps> = ({
       }
       return next;
     });
-  };
-
-  const handleCopyShareLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2500);
-  };
-
-  const handlePrint = () => {
-    window.print();
   };
 
   // Translations
@@ -183,186 +163,10 @@ export const OnlineBriefingView: React.FC<OnlineBriefingViewProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Sticky Action Toolbar: Language Toggle, Calendar Export, Print, Share */}
-      <div className="sticky top-[69px] z-20 bg-white/95 backdrop-blur-md rounded-xl border border-slate-200 p-3 sm:p-4 shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4 print:hidden transition-all">
-        {/* Language selection pills */}
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-slate-500">Sprache / Language:</span>
-          {onLanguageChange && (
-            <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded-lg border border-slate-200">
-              <button
-                onClick={() => onLanguageChange('de')}
-                disabled={isRefreshing}
-                className={`px-2.5 py-1 rounded text-xs font-semibold transition cursor-pointer disabled:opacity-60 ${
-                  language === 'de' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
-                }`}
-                title="Deutsch"
-              >
-                DE
-              </button>
-              <button
-                onClick={() => onLanguageChange('en')}
-                disabled={isRefreshing}
-                className={`px-2.5 py-1 rounded text-xs font-semibold transition cursor-pointer disabled:opacity-60 ${
-                  language === 'en' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
-                }`}
-                title="English"
-              >
-                EN
-              </button>
-              <button
-                onClick={() => onLanguageChange('ru')}
-                disabled={isRefreshing}
-                className={`px-2.5 py-1 rounded text-xs font-semibold transition cursor-pointer disabled:opacity-60 ${
-                  language === 'ru' ? 'bg-blue-600 text-white shadow-xs' : 'text-slate-600 hover:text-slate-900'
-                }`}
-                title="Русский"
-              >
-                RU
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Action buttons */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <button
-            id="export-all-ics-btn"
-            onClick={() => downloadAllExamsIcs(briefing)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-200 transition cursor-pointer"
-            title="Download all upcoming dates and exams as an .ics calendar file"
-          >
-            <Calendar className="w-3.5 h-3.5 text-blue-600" />
-            <span>{t.addToCalendar}</span>
-          </button>
-
-          <button
-            id="print-briefing-btn"
-            onClick={handlePrint}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-200 transition cursor-pointer"
-          >
-            <Printer className="w-3.5 h-3.5 text-slate-600" />
-            <span>{t.printPdf}</span>
-          </button>
-
-          <button
-            id="share-briefing-btn"
-            onClick={handleCopyShareLink}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-200 transition cursor-pointer"
-          >
-            {copiedLink ? (
-              <>
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                <span className="text-emerald-700">{t.linkCopied}</span>
-              </>
-            ) : (
-              <>
-                <Share2 className="w-3.5 h-3.5 text-slate-600" />
-                <span>{t.shareLink}</span>
-              </>
-            )}
-          </button>
-
-          <button
-            id="qr-briefing-btn"
-            onClick={() => setShowQrModal(!showQrModal)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold border border-slate-200 transition cursor-pointer"
-            title="Show Mobile QR Code"
-          >
-            <QrCode className="w-3.5 h-3.5 text-slate-600" />
-            <span>{t.qrCode}</span>
-          </button>
-        </div>
-      </div>
-
-      {/* QR Code Modal for Phone Reading */}
-      {showQrModal && (
-        <div className="bg-slate-900 text-white p-6 rounded-2xl border border-slate-800 shadow-xl max-w-md mx-auto print:hidden">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-bold text-sm text-slate-200 flex items-center gap-2">
-              <QrCode className="w-4 h-4 text-sky-400" />
-              {isRu ? 'Открыть дайджест на телефоне' : isEn ? 'Read Briefing on Mobile' : 'Online-Briefing auf dem Smartphone'}
-            </h3>
-            <button
-              onClick={() => setShowQrModal(false)}
-              className="text-slate-400 hover:text-white text-xs px-2 py-1 bg-slate-800 rounded"
-            >
-              ✕
-            </button>
-          </div>
-          <div className="bg-white p-4 rounded-xl flex items-center justify-center mb-3">
-            <img
-              src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(window.location.href)}`}
-              alt="Briefing QR Code"
-              className="w-44 h-44"
-            />
-          </div>
-          <p className="text-xs text-slate-400 text-center">
-            {isRu
-              ? 'Наведите камеру смартфона, чтобы открыть актуальный онлайн-дайджест KAG Bonn.'
-              : isEn
-              ? 'Scan with your smartphone camera to open this online briefing on the go.'
-              : 'Einfach mit der Smartphone-Kamera scannen, um das Briefing unterwegs zu lesen.'}
-          </p>
-        </div>
-      )}
-
       {/* Main Online Briefing Card Container */}
-      <article className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden print:border-none print:shadow-none">
-        {/* Briefing Masthead Header */}
-        <div className="bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 text-white p-6 sm:p-8 border-b border-slate-800">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2 mb-2 flex-wrap">
-                <span className="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs px-2.5 py-0.5 rounded-full font-semibold">
-                  Konrad-Adenauer-Gymnasium Bonn
-                </span>
-                <span className="bg-white/10 text-slate-200 text-xs px-2.5 py-0.5 rounded-full font-medium">
-                  {briefing.weekLabel}
-                </span>
-                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-xs px-2.5 py-0.5 rounded-full font-medium flex items-center gap-1">
-                  <ShieldCheck className="w-3 h-3 text-emerald-400" />
-                  {isRu ? 'Официальный онлайн-выпуск' : isEn ? 'Official Web Briefing' : 'Offizielles Web-Briefing'}
-                </span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-bold font-serif tracking-tight text-white mb-2 leading-tight">
-                {briefing.headline}
-              </h1>
-              <p className="text-slate-300 text-sm max-w-3xl leading-relaxed">
-                {briefing.greeting}
-              </p>
-            </div>
-
-            <div className="shrink-0 text-left md:text-right text-xs text-slate-400 bg-white/5 p-3 rounded-xl border border-white/10">
-              <div className="text-slate-300 font-medium">
-                {isRu ? 'Источник:' : isEn ? 'Source:' : 'Quelle:'}
-              </div>
-              <a
-                href="https://adenauer-bonn.de/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sky-300 hover:underline flex items-center md:justify-end gap-1 mt-0.5"
-              >
-                adenauer-bonn.de
-                <ExternalLink className="w-3 h-3" />
-              </a>
-              <div className="mt-1 text-[11px] text-slate-400">
-                {new Date(briefing.generatedAt).toLocaleDateString(isRu ? 'ru-RU' : isEn ? 'en-US' : 'de-DE', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Content Body */}
-        <div className="p-6 sm:p-8 space-y-8">
-          {/* 1. ⭐ GRADE 5 FOCUS HERO CARD ⭐ */}
-          {briefing.grade5Focus && (
+      <article className="bg-white rounded-2xl border border-slate-200 shadow-md p-6 sm:p-8 space-y-8 print:border-none print:shadow-none">
+        {/* 1. ⭐ GRADE 5 FOCUS HERO CARD ⭐ */}
+        {briefing.grade5Focus && (
             <section
               id="grade-5-focus-card"
               className="bg-gradient-to-br from-amber-50/90 via-orange-50/50 to-amber-50/90 border-2 border-amber-300 rounded-2xl p-5 sm:p-6 shadow-sm"
@@ -720,7 +524,6 @@ export const OnlineBriefingView: React.FC<OnlineBriefingViewProps> = ({
           <div className="bg-blue-50/70 border border-blue-200/80 rounded-xl p-4 text-center text-xs text-slate-700 italic">
             "{briefing.closingNote}"
           </div>
-        </div>
 
         {/* Footer info within the briefing view */}
         <div className="bg-slate-50 p-4 border-t border-slate-200 text-center text-xs text-slate-500">
