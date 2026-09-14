@@ -157,7 +157,7 @@ export const OnlineBriefingView: React.FC<OnlineBriefingViewProps> = ({
           {t.emptyDesc}
         </p>
         <button
-          onClick={onRefreshSummary}
+          onClick={() => onRefreshSummary()}
           disabled={isRefreshing}
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold text-sm shadow-md hover:from-blue-500 hover:to-indigo-500 transition disabled:opacity-60 cursor-pointer"
         >

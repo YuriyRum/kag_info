@@ -57,7 +57,12 @@ export default function App() {
   }, [fetchAllData]);
 
   // 2. Full Refresh & Regenerate: crawl live adenauer-bonn.de site + generate fresh briefing
-  const handleRefreshSummary = async (targetLang: 'de' | 'en' | 'ru' = language) => {
+  const handleRefreshSummary = async (targetLang?: string | unknown) => {
+    const validLang: 'de' | 'en' | 'ru' =
+      typeof targetLang === 'string' && (targetLang === 'de' || targetLang === 'en' || targetLang === 'ru')
+        ? targetLang
+        : language;
+
     setIsRefreshing(true);
     setGlobalError(null);
     try {
@@ -72,7 +77,7 @@ export default function App() {
       const genRes = await fetch('/api/newsletter/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ language: targetLang }),
+        body: JSON.stringify({ language: validLang }),
       });
 
       if (!genRes.ok) {
@@ -83,7 +88,7 @@ export default function App() {
       const freshBriefing: NewsletterSummary = await genRes.json();
       setNewsletters((prev) => [freshBriefing, ...prev.filter((n) => n.id !== freshBriefing.id)]);
       setCurrentNewsletter(freshBriefing);
-      setLanguage(targetLang);
+      setLanguage(validLang);
     } catch (err: any) {
       console.error('Error refreshing summary:', err);
       setGlobalError(err.message || 'Fehler bei der Aktualisierung des Online-Briefings');
@@ -141,7 +146,7 @@ export default function App() {
               <OnlineBriefingView
                 briefing={currentNewsletter}
                 language={language}
-                onRefreshSummary={handleRefreshSummary}
+                onRefreshSummary={() => handleRefreshSummary()}
                 onLanguageChange={handleLanguageChange}
                 isRefreshing={isRefreshing}
               />
@@ -151,7 +156,7 @@ export default function App() {
           <OnlineBriefingView
             briefing={currentNewsletter}
             language={language}
-            onRefreshSummary={handleRefreshSummary}
+            onRefreshSummary={() => handleRefreshSummary()}
             onLanguageChange={handleLanguageChange}
             isRefreshing={isRefreshing}
           />
