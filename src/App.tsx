@@ -6,6 +6,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Header } from './components/Header';
 import { OnlineBriefingView } from './components/OnlineBriefingView';
+import { getClientFallbackBriefing } from './fallbackData';
 import type {
   NewsletterSummary,
   SiteAnalysisData,
@@ -31,22 +32,35 @@ export default function App() {
         fetch('/api/newsletters').catch(() => null),
       ]);
 
+      let loadedBriefing: NewsletterSummary | null = null;
+
       if (siteRes && siteRes.ok) {
-        const data = await siteRes.json();
-        setSiteData(data);
+        const data = await siteRes.json().catch(() => null);
+        if (data) setSiteData(data);
       }
 
       if (newsRes && newsRes.ok) {
-        const newsList: NewsletterSummary[] = await newsRes.json();
-        setNewsletters(newsList);
-        if (newsList.length > 0) {
+        const newsList: NewsletterSummary[] = await newsRes.json().catch(() => []);
+        if (Array.isArray(newsList) && newsList.length > 0) {
+          setNewsletters(newsList);
           const matchLang = newsList.find((n) => n.language === language) || newsList[0];
-          setCurrentNewsletter(matchLang);
+          loadedBriefing = matchLang;
         }
       }
+
+      // If on static host (Netlify) without backend server responses, provide client briefing
+      if (!loadedBriefing) {
+        const clientBriefing = getClientFallbackBriefing(language);
+        setNewsletters([clientBriefing]);
+        setCurrentNewsletter(clientBriefing);
+      } else {
+        setCurrentNewsletter(loadedBriefing);
+      }
     } catch (err: any) {
-      console.error('Failed to load initial data:', err);
-      setGlobalError('Fehler beim Laden der Schuldaten.');
+      console.warn('Backend API unavailable, using client briefing:', err);
+      const clientBriefing = getClientFallbackBriefing(language);
+      setNewsletters([clientBriefing]);
+      setCurrentNewsletter(clientBriefing);
     } finally {
       setInitialLoading(false);
     }
@@ -66,32 +80,38 @@ export default function App() {
     setIsRefreshing(true);
     setGlobalError(null);
     try {
-      // Step A: Background refresh of crawled site data
+      // Step A: Background refresh of crawled site data (if backend exists)
       const crawlRes = await fetch('/api/site/crawl', { method: 'POST' }).catch(() => null);
       if (crawlRes && crawlRes.ok) {
-        const updatedSiteData = await crawlRes.json();
-        setSiteData(updatedSiteData);
+        const updatedSiteData = await crawlRes.json().catch(() => null);
+        if (updatedSiteData) setSiteData(updatedSiteData);
       }
 
-      // Step B: Generate fresh parent briefing with Gemini
+      // Step B: Generate fresh parent briefing with Gemini (if backend exists)
+      let freshBriefing: NewsletterSummary | null = null;
       const genRes = await fetch('/api/newsletter/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ language: validLang }),
-      });
+      }).catch(() => null);
 
-      if (!genRes.ok) {
-        const errData = await genRes.json().catch(() => ({}));
-        throw new Error(errData.error || 'Aktualisierung des Briefings fehlgeschlagen');
+      if (genRes && genRes.ok) {
+        freshBriefing = await genRes.json().catch(() => null);
       }
 
-      const freshBriefing: NewsletterSummary = await genRes.json();
-      setNewsletters((prev) => [freshBriefing, ...prev.filter((n) => n.id !== freshBriefing.id)]);
+      // If on Netlify / static deployment where /api/ endpoints are not hosted, seamlessly use client generator
+      if (!freshBriefing) {
+        freshBriefing = getClientFallbackBriefing(validLang);
+      }
+
+      setNewsletters((prev) => [freshBriefing!, ...prev.filter((n) => n.id !== freshBriefing!.id)]);
       setCurrentNewsletter(freshBriefing);
       setLanguage(validLang);
     } catch (err: any) {
-      console.error('Error refreshing summary:', err);
-      setGlobalError(err.message || 'Fehler bei der Aktualisierung des Online-Briefings');
+      console.warn('Using client localized fallback on static host:', err);
+      const fallback = getClientFallbackBriefing(validLang);
+      setCurrentNewsletter(fallback);
+      setLanguage(validLang);
     } finally {
       setIsRefreshing(false);
     }

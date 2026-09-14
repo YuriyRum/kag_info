@@ -390,7 +390,7 @@ Please output strictly valid JSON according to the schema.
   try {
     const ai = getAi();
     const generatePromise = ai.models.generateContent({
-      model: 'gemini-2.5-flash',
+      model: 'gemini-3.8-flash',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',

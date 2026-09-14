@@ -47,7 +47,7 @@ async function startServer() {
   // 2. Generate Newsletter using Gemini 3.8 Flash
   app.post('/api/newsletter/generate', async (req, res) => {
     try {
-      const { language = 'de', customInstructions } = req.body;
+      const { language = 'de', customInstructions } = req.body || {};
       let siteData = getCachedAnalysis();
       if (!siteData || siteData.posts.length === 0) {
         siteData = await crawlAdenauerWebsite(false);
