@@ -1,0 +1,6 @@
+{
+  "name": "KAG Bonn Eltern-Briefing",
+  "description": "Online weekly parent briefing portal for Konrad-Adenauer-Gymnasium Bonn (https://adenauer-bonn.de/) featuring interactive grade filters, exams, mensa updates, and calendar export with direct web access.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
